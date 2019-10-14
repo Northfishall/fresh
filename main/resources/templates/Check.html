@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>基于区块链的食品安全追溯系统</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet" />
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">食品安全追溯系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="signup">申请</a></li>
+            <li class="layui-nav-item"><a href="Produce">生产商</a></li>
+            <li class="layui-nav-item"><a href="Transit">运输商页面</a></li>
+            <li class="layui-nav-item"><a href="Franchiser">经销商</a></li>
+            <li class="layui-nav-item"><a href="Check">追溯</a></li>
+            <li class="layui-nav-item" onclick="initweb3()"><a href="">授权</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">使用手册</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="HowToLogin">登录</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">使用</a>
+                        </dd>
+                        <dd>
+                            <a href="">其他</a>
+                        </dd>
+                    </dl></li>
+                <li class="layui-nav-item"><a href="javascript:;">解决方案</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;">联系我们：shipinzhuisuxitong@126.com</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">列表二</a>
+                        </dd>
+                        <dd>
+                            <a href="">超链接</a>
+                        </dd>
+                    </dl></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <form class="layui-form" action="" id="dataform">
+            <div class="layui-form-item">
+                <label class="layui-form-label">唯一标识id</label>
+                <div class="layui-input-block" style="width: 70%;margin-top:1%">
+                    <input type="text" name="dataIndex"  placeholder="请输入唯一id" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司名称</label>
+                <div class="layui-input-block" style="width: 70%">
+                    <input type="text" name="dataCompany"  placeholder="请输公司名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">查询方式</label>
+                <div class="layui-input-block" style="width: 70%" >
+                    <label>
+                        <select name="Option" lay-verify="required">
+                            <option value=""></option>
+                            <option value="0">唯一标志ID</option>
+                            <option value="1">公司名称</option>
+                            <option value="2">ID以及名称</option>
+                        </select>
+                    </label>
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">确定</button>
+                </div>
+            </div>
+        </form>
+
+
+<!--        <table lay-filter="demo">
+            <thead>
+            <tr>
+                <th lay-data="{field:'id', width:100}">ID</th>
+                <th lay-data="{field:'pname', width:80, sort:true}">食品名称</th>
+                <th lay-data="{field:'cname'}">公司名称</th>
+            </tr>
+            </thead>
+        </table>-->
+
+
+
+
+        <div class="layui-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">生产商</li>
+                <li>运输商</li>
+                <li>经销商</li>
+                <li>产品状态</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+
+                    <table lay-filter="TableP">
+                        <thead>
+                        <tr>
+                            <th lay-data="{field:'ID', sort:true}">ID</th>
+                            <th lay-data="{field:'Pname'}">产品名称</th>
+                            <th lay-data="{field:'Cname'}">公司名称</th>
+                            <th lay-data="{field:'Pdate', sort:true}">生产日期</th>
+                            <th lay-data="{field:'SaveTime'}">保质期</th>
+                            <th lay-data="{field:'Tel'}">联系电话</th>
+                            <th lay-data="{field:'Location'}">地址</th>
+                            <th lay-data="{field:'Original'}">原材料</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablep_body">
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-tab-item">
+                    <table lay-filter="TableT">
+                        <thead>
+                        <tr>
+                            <!--width:80,-->
+                            <th lay-data="{field:'ID', sort:true}">ID</th>
+                            <th lay-data="{field:'Pname'}">产品名称</th>
+                            <th lay-data="{field:'Cname'}">公司名称</th>
+                            <th lay-data="{field:'Location'}">仓库地址</th>
+                            <th lay-data="{field:'DateIn', sort:true}">入库日期</th>
+                            <th lay-data="{field:'DateOut', sort:true}">出库日期</th>
+                            <th lay-data="{field:'Other'}">备注</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablet_body">
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-tab-item">
+                    <table lay-filter="TableF">
+                        <thead>
+                        <tr>
+                            <th lay-data="{field:'ID',  sort:true}">ID</th>
+                            <th lay-data="{field:'Pname'}">产品名称</th>
+                            <th lay-data="{field:'Cname'}">公司名称</th>
+                            <th lay-data="{field:'Location'}">公司地址</th>
+                            <th lay-data="{field:'DateIn', sort:true}">入库时间</th>
+                            <th lay-data="{field:'Other'}">备注</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablef_body">
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-tab-item">
+                    <ul class="layui-timeline" id="TimeLine">
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <script th:src="@{/layui/layui.js}"></script>
+
+        <!-- 内容主体区域 -->
+        <!--<div style="padding: 15px;">内容主体区域</div>-->
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © hitcs - 基于区块链的食品安全追溯系统
+    </div>
+</div>
+<script th:src="@{https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.0.5-beta.12/build/g6.js}"></script>
+<script th:src="@{https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js}"></script>
+<script th:src="@{https://gw.alipayobjects.com/os/antv/assets/lib/d3-4.13.0.min.js}"></script>
+<script th:src="@{/dist/echarts.js}"></script>
+<script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+
+<script th:src="@{/web3.js-1.0.0-beta.32/dist/web3.js}"></script>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/layui/layui.all.js}"></script>
+<script th:src="@{/EthSetFunction.js}"></script>
+<script th:src="@{/EthSetting.js}"></script>
+<script th:src="@{/EthCheckFunction.js}"></script>
+<script th:src="@{/JsCheckFunction.js}"></script>
+<script th:src="@{/JsTimeLineFunction.js}"></script>
+<script th:src="@{/JsTableFunction.js}"></script>
+
+<!--<script th:src="@{http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js}" type="text/javascript"></script>-->
+
+<script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
+<script>
+    //根据ID查询中用来记录三种结果
+    //由于是异步调用，所以采用全局参数
+    var resultP;
+    var resultT;
+    var resultF;
+
+    //渲染静态表格
+    initTableP();
+    initTableF();
+    initTableT();
+    //JavaScript代码区域
+    layui.use('form', function()
+    {
+        //渲染form
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            try {
+                //用于三种类型的商家进行异步查询返回的统计
+                var DataNumber = 0;
+                //由于JSON.stringify方法返回的数据会带有""所以进行切割处理。可能有更好的方法
+                var Option = JSON.stringify(data.field.Option);
+                var _option = Option.slice(1,(Option.length-1));
+                var cname = JSON.stringify(data.field.dataCompany);
+                console.log(cname);
+                var Cname = cname.slice(1,(cname.length-1));
+                console.log(Cname);
+                var index = JSON.stringify(data.field.dataIndex);
+                var Index = index.slice(1,(index.length-1));
+                //通过ID查询
+                if(_option == "0")
+                {
+                    //通过ID查询商家信息
+                    JsCheckByIndexP(Index,
+                        function (r)
+                    {
+                        var DataJson = [];
+                        //无数据的情况
+                        if(r=="No data")
+                        {
+                            console.log("No P data");
+                        }
+                        else
+                        {
+                            //对返回的json数组进行了解析，提取其中需要的部分
+                            for(var x in r)
+                            {
+                                console.log(r[x].returnValues);
+                                //将返回的数据放入到数组中用于生成表格对应代码
+                                DataJson.push(r[x].returnValues);
+                            }
+                            console.log(DataJson);
+                        }
+                        //根据数据生成表格代码插入html
+                        loadDataP(DataJson);
+                        resultP = DataJson;
+                        DataNumber++;
+                        console.log("P number："+DataNumber);
+                        // console.log(r);
+                        // console.log("TestSuccess");
+                        if(DataNumber==3)
+                        {
+                            //只有在获取了全部三种数据之后才能生成时间轴
+                            loadTimeline(resultP,resultT,resultF);
+                        }
+                    });
+                    //根据ID查询运输商信息
+                    JsCheckByIndexT(Index,
+                        function (r)
+                    {
+                        var DataJson = [];
+                        if(r=="No data")
+                        {
+                            console.log("No T Data");
+                        }
+                        else
+                        {
+                            for(var x in r)
+                            {
+                                console.log(r[x].returnValues);
+                                DataJson.push(r[x].returnValues);
+                            }
+                            console.log(DataJson);
+                        }
+                        loadDataT(DataJson);
+                        resultT = DataJson;
+                        DataNumber++;
+                        console.log("T number："+""+DataNumber);
+                        if(DataNumber==3)
+                        {
+                            loadTimeline(resultP,resultT,resultF);
+                        }
+                    });
+                    //根据ID查询经销商信息
+                    JsCheckByIndexF(Index,
+                        function (r)
+                    {
+                        console.log("dataArray");
+                        var DataJson = [];
+                        if(r=="No data")
+                        {
+                            console.log("No F data");
+                        }
+                        else
+                        {
+                            for(var x in r)
+                            {
+                                console.log(r[x].returnValues);
+                                DataJson.push(r[x].returnValues);
+                            }
+                            console.log(DataJson);
+                        }
+                        loadDataF(DataJson);
+                        resultF = DataJson;
+                        DataNumber++;
+                        console.log("F number："+""+DataNumber);
+                        if(DataNumber==3)
+                        {
+                            loadTimeline(resultP,resultT,resultF);
+                        }
+                    });
+                }
+                //通过公司名称进行查询
+                else if (_option == '1')
+                {
+                    //传输给后台的JSON数据。
+                    var Name = {"CompanyName":Cname};
+                    console.log(Name);
+                    JsCheckByAddress(Name,function(ResultByAddress)
+                    {
+                        if(ResultByAddress=="NoData")
+                        {
+                            console.log("No Company named Input");
+                        }
+                        else
+                        {
+                            //需要写入表格中的数据
+                            var datas = [];
+
+                            //datas.push(JSON.parse(ResultByAddress));
+                            //返回的数据第一项为类型,之后为数据，格式为[{},{},{},...]
+                            var Type = ResultByAddress[0].Type;
+
+                            //datas.push(ResultByAddress);
+                            for(var y = 1;y<ResultByAddress.length;y++)
+                            {
+                                console.log("ResultBYindex");
+                                console.log(ResultByAddress[y]);
+                                datas.push(ResultByAddress[y]);
+                            }
+                            //根据种类加载到对应的表格中
+                            if(Type == "P")
+                            {
+                                loadDataP(datas);
+                            }
+                            else if (Type == "T")
+                            {
+                                loadDataT(datas);
+                            }
+                            else if(Type == "F")
+                            {
+                                loadDataF(datas);
+                            }
+                            else
+                            {
+                                alert("error");
+                            }
+                        }
+                    });
+                }
+                //通过ID以及公司名称进行查询
+                else if (_option == '2')
+                {
+                    //Post 参数 公司名称以及ID
+                    var NameID = {"CompanyName":Cname,"Index":Index};
+                    console.log(NameID);
+                    JsCheckByIndexAddress(Index,NameID,function (ResultByIndexAddress)
+                    {
+                        console.log(ResultByIndexAddress);
+                        //生成表格所需的数据
+                        var datas = [];
+                        //查询公司的种类
+                        var Type = ResultByIndexAddress[0].Type;
+                        //提取返回结果中的数据
+                        for(var z = 1;z<ResultByIndexAddress.length;z++)
+                        {
+                            datas.push(ResultByIndexAddress[z]);
+                        }
+                        //根据商家种类构造渲染对应的表格
+                        if(Type == "P")
+                        {
+                            loadDataP(datas);
+                        }
+                        else if(Type == "T")
+                        {
+                            loadDataT(datas);
+                        }
+                        else if (Type == "F")
+                        {
+                            loadDataF(datas);
+                        }
+                        else
+                        {
+                            console.log("error!");
+                        }
+                        console.log(ResultByIndexAddress);
+                    });
+                }
+
+            }
+            catch (e) {
+                console.log(e);
+            }
+
+            //layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+
+    //////////////////////////////////////
+
+    file_data='Map2.json';
+
+
+    var graph = new G6.Graph({
+        container: 'mountNode',
+        width: window.innerWidth,
+        height: window.innerHeight,
+        //fitView: true,
+        //fitViewPadding: [ 20, 40, 50, 20 ],
+        autoPaint: false,
+        //layout: {
+        //  type: 'random',
+        //    width: window.innerWidth/2,
+        //    height:  window.innerHeight/2
+        //  },
+        layout: {
+            type: 'force'
+        },
+        modes: {
+            default: ['drag-canvas', {
+                type: 'tooltip',
+                formatText: function formatText(model) {
+                    return 'name: '+model.name+ '<br/>degree: '+model.degree
+                        +'<br/>coreness: '+model.properties['registCapi']+'<br/>node-betweennes: '+model.properties['name'];
+                }
+            }, {
+                type: 'edge-tooltip',
+                formatText: function formatText(model, e) {
+                    var edge = e.item;
+                    return '<' + edge.getSource().getModel().name +','+ edge.getTarget().getModel().name+'>'
+                        +'<br/>edge-betweenness:'+model.type;
+                }
+            }]
+        },
+        defaultNode: {
+            size: [10, 10],
+            color: 'steelblue'
+        },
+        defaultEdge: {
+            size: 1
+        },
+        nodeStyle: {
+            default: {
+                lineWidth: 8,
+                fill: 'steelblue'
+            },
+            highlight: {
+                opacity: 1
+            },
+            dark: {
+                opacity: 0.2
+            }
+        },
+        edgeStyle: {
+            default: {
+                stroke: '#e2e2e2',
+                lineAppendWidth: 2
+            },
+            highlight: {
+                stroke: '#999'
+            }
+        }
+    });
+    draw(file_data);
+    function draw(file_data){
+
+        function clearAllStats() {
+            graph.setAutoPaint(false);
+            graph.getNodes().forEach(function(node) {
+                graph.clearItemStates(node);
+            });
+            graph.getEdges().forEach(function(edge) {
+                graph.clearItemStates(edge);
+            });
+            graph.paint();
+            graph.setAutoPaint(true);
+        }
+        graph.on('node:mouseenter', function(e) {
+            var item = e.item;
+            graph.setAutoPaint(false);
+            graph.getNodes().forEach(function(node) {
+                graph.clearItemStates(node);
+                graph.setItemState(node, 'dark', true);
+            });
+            graph.setItemState(item, 'dark', false);
+            graph.setItemState(item, 'highlight', true);
+            graph.getEdges().forEach(function(edge) {
+                if (edge.getSource() === item) {
+                    graph.setItemState(edge.getTarget(), 'dark', false);
+                    graph.setItemState(edge.getTarget(), 'highlight', true);
+                    graph.setItemState(edge, 'highlight', true);
+                    edge.toFront();
+                } else if (edge.getTarget() === item) {
+                    graph.setItemState(edge.getSource(), 'dark', false);
+                    graph.setItemState(edge.getSource(), 'highlight', true);
+                    graph.setItemState(edge, 'highlight', true);
+                    edge.toFront();
+                } else {
+                    graph.setItemState(edge, 'highlight', false);
+                }
+            });
+            graph.paint();
+            graph.setAutoPaint(true);
+        });
+        graph.on('node:mouseleave', clearAllStats);
+        graph.on('canvas:click', clearAllStats);
+        $.getJSON(file_data, function(data) {
+            graph.data({
+                nodes: data.nodes,
+                edges: data.edges.map(function(edge, i) {
+                    edge.id = 'edge' + i;
+                    return Object.assign({}, edge);
+                })
+            });
+            var simulation = d3.forceSimulation().force("link", d3.forceLink().id(function(d) {
+                return d.id;
+            }).strength(0.5)).force("charge", d3.forceManyBody()).force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2));
+            simulation.nodes(data.nodes).on("tick", ticked);
+            simulation.force("link").links(data.edges);
+
+            graph.render();
+
+            function ticked() {
+                graph.refreshPositions();
+                graph.paint();
+            }
+        });
+    }
+    /////////////////////////////////////////
+
+
+
+
+    //渲染layui
+    layui.use('laydate', function()
+    {
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#dataDateIn' //指定元素
+        });
+    });
+
+    layui.use('element', function() {
+        var element = layui.element;
+
+    });
+
+</script>
+</body>
+</html>

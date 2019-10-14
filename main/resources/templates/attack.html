@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{layui/layui.js}"></script>
+<link href="./layui/css/layui.css" rel="stylesheet" type="text/css"/>
+<body>
+<form class="layui-form" action="">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">请选择攻击方式</label>
+        <div class="layui-input-block">
+            <select name="attack_mode" lay-verify="required">
+                <option value=""></option>
+                <option value="0">故意攻击(去掉度最大的点)</option>
+                <option value="1">随机攻击</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">被攻击的节点个数</label>
+        <div class="layui-input-block">
+            <input type="number" name="node_numbers" required  lay-verify="required" placeholder="请输入被攻击的节点个数" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置/刷新</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+
+        form.on('submit(formDemo)', function(data){
+            var number=JSON.stringify(data.field.node_numbers);
+            var Type=JSON.stringify(data.file.attack_mode);
+            if (Type=="0")
+            {
+                var key = {"Type":"1","Value":""+number};
+                $.ajax({
+                    type: 'POST',
+                    url: "Attack",
+                    dataType: "json",
+                    data: JSON.stringify(key),
+                    contentType : "application/json",
+                    success: function(R) {
+                        console.log("success save");
+                        return "success";
+                    },
+                    error: function() {
+                        console.log("error");
+                    }
+                });
+            }
+            else
+            {
+                var key = {"Type":"2","Value":""+number};
+                $.ajax({
+                    type: 'POST',
+                    url: "/Attack",
+                    dataType: "json",
+                    data: JSON.stringify(key),
+                    contentType : "application/json",
+                    success: function(R) {
+                        console.log("success save");
+                        return "success";
+                    },
+                    error: function() {
+                        console.log("error");
+                    }
+                });
+            }
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+</html>

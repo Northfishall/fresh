@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>基于区块链的食品安全追溯系统</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet" />
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">食品安全追溯系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="signup">申请</a></li>
+            <li class="layui-nav-item"><a href="Produce">生产商</a></li>
+            <li class="layui-nav-item"><a href="Transit">运输商页面</a></li>
+            <li class="layui-nav-item"><a href="Franchiser">经销商</a></li>
+            <li class="layui-nav-item"><a href="Check">追溯</a></li>
+        </ul>
+
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">使用手册</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="HowToLogin">登录</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">使用</a>
+                        </dd>
+                        <dd>
+                            <a href="">超链接</a>
+                        </dd>
+                    </dl></li>
+                <li class="layui-nav-item"><a href="javascript:;">解决方案</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;">联系我们：shipinzhuisuxitong@126.com</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">列表二</a>
+                        </dd>
+                        <dd>
+                            <a href="">超链接</a>
+                        </dd>
+                    </dl></li>
+                <!--                <li class="layui-nav-item"><a href="">云市场</a></li>
+                                <li class="layui-nav-item"><a href="">发布商品</a></li>-->
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+
+        <fieldset class="layui-elem-field">
+            <legend>如何登录</legend>
+            <div class="layui-field-box">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>第一步安装MetaMask</legend>
+                    <div class="layui-field-box">
+
+                        <br>首先使用以太坊需要有一个以太坊账号，MetaMask是一个专门为以太坊设计的浏览器插件，
+                        <br>集成了账号秘钥的管理功能。
+                        <br>
+                        <br>下载网站：
+                        <br>https://metamask.io/
+                        <br>
+
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>第二步注册ETH账号</legend>
+                    <div class="layui-field-box">
+
+                        <br>进入MetaMask，仅需按照指引进行注册即可，记住密码以及关键字方便日后找回密码。
+                        <br>
+
+                    </div>
+                </fieldset>
+
+
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>第三步连接联盟链</legend>
+                    <div class="layui-field-box">
+
+                        <br>点击MetaMask界面的网络部分，点击自定义RPC。输入前两项，名字自定义，RPC URL为
+                        <br>
+                        <br>//127.0.0.1:8545
+                        <br>
+
+
+                    </div>
+                </fieldset>
+
+
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>第四步申请</legend>
+                    <div class="layui-field-box">
+
+
+                        <br>在申请表格中填写上自己的以太坊账号地址，可以直接在MetaMask中点击复制。
+                        <br>
+                        <br>管理员通过申请之后即会向该地址发送以太币以供输入数据使用。
+                        <br>
+                        <br>当MetaMask中的以太币数量不为0时，即为通过申请
+                        <br>
+
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>第五步登录MetaMask</legend>
+                    <div class="layui-field-box">
+
+                        <br>
+                        <br>直接登录MetaMask，选择第三步添加的网络即可。之后都可以这样登录了，无需重复上边四个步骤。
+                        <br>
+
+
+                    </div>
+                </fieldset>
+            </div>
+        </fieldset>
+
+
+        <!-- 内容主体区域 -->
+        <!--<div style="padding: 15px;">内容主体区域</div>-->
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © hitcs - 基于区块链的食品安全追溯系统
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
+<script>
+    //JavaScript代码区域
+
+    layui.use('element', function() {
+        var element = layui.element;
+
+    });
+</script>
+</body>
+</html>

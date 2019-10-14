@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>基于区块链的食品安全追溯系统</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet" />
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">食品安全追溯系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="signup">申请</a></li>
+            <li class="layui-nav-item"><a href="Produce">生产商</a></li>
+            <li class="layui-nav-item"><a href="Transit">运输商页面</a></li>
+            <li class="layui-nav-item"><a href="Franchiser">经销商</a></li>
+            <li class="layui-nav-item"><a href="Check">追溯</a></li>
+            <li class="layui-nav-item" onclick="initweb3()"><a href="">授权</a></li>
+        </ul>
+
+    </div>
+
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed"><a class="" href="javascript:;">使用手册</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;">申请</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">登录</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">使用</a>
+                        </dd>
+                        <dd>
+                            <a href="">其他</a>
+                        </dd>
+                    </dl></li>
+                <li class="layui-nav-item"><a href="javascript:;">解决方案</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;">联系我们：shipinzhuisuxitong@126.com</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;">列表二</a>
+                        </dd>
+                        <dd>
+                            <a href="">超链接</a>
+                        </dd>
+                    </dl></li>
+                <!--                <li class="layui-nav-item"><a href="">云市场</a></li>
+                                <li class="layui-nav-item"><a href="">发布商品</a></li>-->
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+
+
+        <form class="layui-form" action="" id="dataform">
+            <div class="layui-form-item">
+                <label class="layui-form-label">唯一标识id</label>
+                <div class="layui-input-block" style="width: 70%;margin-top:1%">
+                    <input type="text" name="dataIndex" id="dataIndex" required  lay-verify="required" placeholder="请输唯一标识id" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品名称</label>
+                <div class="layui-input-block" style="width: 70%">
+                    <input type="text" name="dataProduceName" required  lay-verify="required" placeholder="请输入产品名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公司名称</label>
+                <div class="layui-input-block" style="width: 70%">
+                    <input type="text" name="dataCompany" required  lay-verify="required" placeholder="请输入公司名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">仓库地址</label>
+                <div class="layui-input-block" style="width: 70%">
+                    <input type="text" name="dataLocation" required  lay-verify="required" placeholder="请输入公司地址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">入库日期</label>
+                <div class="layui-inline">
+                    <input type="text" name="dataDateIn" placeholder="请选择入库日期" class="layui-input" id="dataDateIn">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出库日期</label>
+                <div class="layui-inline">
+                    <input type="text" name="dataDateOut" placeholder="请选择出库日期" class="layui-input" id="dataDateOut">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block" style="width: 70%">
+                    <textarea type="text" name="dataOther" placeholder="请输入备注" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+                </div>
+            </div>
+        </form>
+        <script th:src="@{/layui/layui.js}"></script>
+
+
+
+
+
+        <!-- 内容主体区域 -->
+        <!--<div style="padding: 15px;">内容主体区域</div>-->
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © hitcs - 基于区块链的食品安全追溯系统
+    </div>
+</div>
+<script th:src="@{/web3.js-1.0.0-beta.32/dist/web3.js}"></script>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/EthSetFunction.js}"></script>
+<script th:src="@{/EthCheckFunction.js}"></script>
+<script th:src="@{/EthSetting.js}"></script>
+<script th:src="@{/JsSetDB.js}"></script>
+<script th:src="@{/license.js}"></script>
+<script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
+<script>
+    //JavaScript代码区域
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            try
+            {
+                setDBT(JSON.stringify(data.field.dataIndex),JSON.stringify(data.field.dataCompany),
+                    JSON.stringify(data.field.dataLocation),JSON.stringify(data.field.dataDateIn),
+                    JSON.stringify(data.field.dataDateOut),JSON.stringify(data.field.dataProduceName),
+                    JSON.stringify(data.field.dataOther));
+                /*            setDataT(JSON.stringify(data.field.dataIndex),JSON.stringify(data.field.dataCompany),
+                                JSON.stringify(data.field.dataLocation),JSON.stringify(data.field.dataDateIn),
+                                JSON.stringify(data.field.dataDateOut),JSON.stringify(data.field.dataProduceName),
+                                function (tx) {
+                                    var OIndex = JSON.stringify(data.field.dataIndex);
+                                    var Jindex = OIndex.slice(1,(OIndex.length-1));
+                                    var Tx = {"Tx":tx,"Index":Jindex};
+                                    console.log("TxPost"+Tx.Tx);
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: "/SetTxT",
+                                        dataType: "json",
+                                        data: JSON.stringify(Tx),
+                                        contentType : "application/json",
+                                        success: function(R) {
+                                            console.log("success save")
+                                        },
+                                        error: function() {
+                                            console.log("error");
+                                        }
+                                    });
+
+                                });*/
+            }
+            catch (e) {
+                console.log(e);
+            }
+
+            //layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(check)', function(){
+            try {
+                checkPastByIndexT('112');
+            }
+            catch (e) {
+                console.log(e);
+            }
+            return false;
+        });
+    });
+
+
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#dataDateIn' //指定元素
+        });
+    });
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#dataDateOut' //指定元素
+        });
+    });
+
+    layui.use('element', function() {
+        var element = layui.element;
+
+    });
+</script>
+</body>
+</html>

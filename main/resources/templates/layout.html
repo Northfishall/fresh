@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>layout 后台大布局 - Layui</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <script src="picture.js"></script>
+</head>
+
+
+<!-- 引入 echarts.js -->
+<script src="./dist/echarts.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<!-- 引入网络图 -->
+
+<link href="./layui/css/layui.css" rel="stylesheet" type="text/css"/>
+<script src="./layui/layui.js" type="text/javascript"></script>
+<script src="./layui/layui.js"></script>
+
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.0.5-beta.12/build/g6.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/lib/d3-4.13.0.min.js"></script>
+<style>
+    .g6-tooltip {
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+        font-size: 12px;
+        color: #545454;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 10px 8px;
+        box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+    }
+</style>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">复杂网络建模Project</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item">
+
+            </li>
+
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    项目成员
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">网络属性</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript: degree()" >节点度的分布</a></dd>
+                        <dd><a href="javascript: coreness()">节点coreness的分布</a></dd>
+                        <dd><a href="javascript: shortest_path()">最短路径</a></dd>
+                        <dd><a href="javascript: Clustering_coefficient()">聚类系数</a></dd>
+                    </dl>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div id="mountNode"></div>
+        <form class="layui-form" action="">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">请选择攻击方式</label>
+                <div class="layui-input-block">
+                    <select name="attack_mode" lay-verify="required">
+                        <option value=""></option>
+                        <option value="0">故意攻击(去掉度最大的点)</option>
+                        <option value="1">随机攻击</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">被攻击的节点个数</label>
+                <div class="layui-input-block">
+                    <input type="number" name="node_numbers" required  lay-verify="required" placeholder="请输入被攻击的节点个数" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo" id="submit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置/刷新</button>
+                </div>
+            </div>
+        </form>
+        <style>
+            .layui-form-label{
+                width: 100px;
+                height:50px;
+                margin-left:750px;
+            }
+            .layui-input-block {
+                margin-left: 900px;
+                max-height: 50px;
+                max-width: 280px;
+            }
+
+        </style>
+
+
+
+
+
+
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+
+
+<script>
+
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+    });
+    function degree(){
+
+            layer.open({
+                type: 1,
+                content: $("#main").html(), //注意，如果str是object，那么需要字符拼接。
+                area: ['1080px', '720px'],
+            });
+
+    }
+    function coreness() {
+        $.post('coreness.html', {}, function(str){
+            layer.open({
+                type: 1,
+                content: str, //注意，如果str是object，那么需要字符拼接。
+                area: ['1080px', '720px'],
+            });
+        });
+
+
+    }
+    function shortest_path() {
+        layer.open({
+            type: 0,
+            content: '平均最短路径为：' //这里content是一个普通的String
+        });
+
+    }
+    function Clustering_coefficient() {
+        layer.open({
+            type: 0,
+            content: '聚类系数为：' //这里content是一个普通的String
+        });
+
+    }
+    function attack_attribute(){
+        $.post('attack.html', {}, function(str){
+            layer.open({
+                type: 1,
+                content: str, //注意，如果str是object，那么需要字符拼接。
+                area: ['480px', '240px'],
+
+            });
+        });
+
+
+    }
+    function GetValue(obj) {
+        $(getvalue).val(v);
+    }
+
+
+
+
+</script>
+<script>
+    file_data='Map.json';
+
+
+    var graph = new G6.Graph({
+        container: 'mountNode',
+        width: window.innerWidth,
+        height: window.innerHeight,
+        //fitView: true,
+        //fitViewPadding: [ 20, 40, 50, 20 ],
+        autoPaint: false,
+        //layout: {
+        //  type: 'random',
+        //    width: window.innerWidth/2,
+        //    height:  window.innerHeight/2
+        //  },
+        layout: {
+            type: 'force'
+        },
+        modes: {
+            default: ['drag-canvas', {
+                type: 'tooltip',
+                formatText: function formatText(model) {
+                    return 'name: '+model.name+ '<br/>degree: '+model.degree
+                        +'<br/>coreness: '+model.properties['registCapi']+'<br/>node-betweennes: '+model.properties['name'];
+                }
+            }, {
+                type: 'edge-tooltip',
+                formatText: function formatText(model, e) {
+                    var edge = e.item;
+                    return '<' + edge.getSource().getModel().name +','+ edge.getTarget().getModel().name+'>'
+                        +'<br/>edge-betweenness:'+model.type;
+                }
+            }]
+        },
+        defaultNode: {
+            size: [10, 10],
+            color: 'steelblue'
+        },
+        defaultEdge: {
+            size: 1
+        },
+        nodeStyle: {
+            default: {
+                lineWidth: 8,
+                fill: 'steelblue'
+            },
+            highlight: {
+                opacity: 1
+            },
+            dark: {
+                opacity: 0.2
+            }
+        },
+        edgeStyle: {
+            default: {
+                stroke: '#e2e2e2',
+                lineAppendWidth: 2
+            },
+            highlight: {
+                stroke: '#999'
+            }
+        }
+    });
+    draw(file_data);
+    function draw(file_data){
+
+        function clearAllStats() {
+            graph.setAutoPaint(false);
+            graph.getNodes().forEach(function(node) {
+                graph.clearItemStates(node);
+            });
+            graph.getEdges().forEach(function(edge) {
+                graph.clearItemStates(edge);
+            });
+            graph.paint();
+            graph.setAutoPaint(true);
+        }
+        graph.on('node:mouseenter', function(e) {
+            var item = e.item;
+            graph.setAutoPaint(false);
+            graph.getNodes().forEach(function(node) {
+                graph.clearItemStates(node);
+                graph.setItemState(node, 'dark', true);
+            });
+            graph.setItemState(item, 'dark', false);
+            graph.setItemState(item, 'highlight', true);
+            graph.getEdges().forEach(function(edge) {
+                if (edge.getSource() === item) {
+                    graph.setItemState(edge.getTarget(), 'dark', false);
+                    graph.setItemState(edge.getTarget(), 'highlight', true);
+                    graph.setItemState(edge, 'highlight', true);
+                    edge.toFront();
+                } else if (edge.getTarget() === item) {
+                    graph.setItemState(edge.getSource(), 'dark', false);
+                    graph.setItemState(edge.getSource(), 'highlight', true);
+                    graph.setItemState(edge, 'highlight', true);
+                    edge.toFront();
+                } else {
+                    graph.setItemState(edge, 'highlight', false);
+                }
+            });
+            graph.paint();
+            graph.setAutoPaint(true);
+        });
+        graph.on('node:mouseleave', clearAllStats);
+        graph.on('canvas:click', clearAllStats);
+        $.getJSON(file_data, function(data) {
+            graph.data({
+                nodes: data.nodes,
+                edges: data.edges.map(function(edge, i) {
+                    edge.id = 'edge' + i;
+                    return Object.assign({}, edge);
+                })
+            });
+            // var simulation = d3.forceSimulation().force("link", d3.forceLink().id(function(d) {
+            //     return d.id;
+            // }).strength(0.5)).force("charge", d3.forceManyBody()).force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2));
+            // simulation.nodes(data.nodes).on("tick", ticked);
+            // simulation.force("link").links(data.edges);
+
+            graph.render();
+
+            function ticked() {
+                graph.refreshPositions();
+                graph.paint();
+            }
+        });
+    }
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        //监听提交
+        form.on('submit()', function(data){
+            var Get_data=JSON.stringify(data.field);
+            layer.msg(Get_data);
+            file_data='test.json';
+            draw(file_data);
+            graph.render();
+            graph.refreshPositions();
+            graph.paint();
+            return false;
+        });
+    });
+
+</script>
+</body>
+
+</html>

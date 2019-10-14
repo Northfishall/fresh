@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>基于区块链的食品安全追溯系统</title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet" />
+</head>
+<body>
+<img class = "background" src="/BackGround.jpg">
+<div class="login">
+    <h1>食品追溯系统登录</h1>
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <input class="layui-input" name="username" id="username" placeholder="用户名/手机号" value="" lay-verify="required" type="text" autocomplete="off">
+        </div>
+        <div class="layui-form-item">
+            <input class="layui-input" name="password" id="password" placeholder="密码" value="" lay-verify="required" type="password" autocomplete="off">
+        </div>
+<!--        <div class="layui-form-item">
+            <input id="rememberMe" lay-skin="primary" type="checkbox" name="" title="记住我" lay-filter="autoLogin"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>记住我</span><i class="layui-icon"></i></div>
+            <span class="forget-password">忘记密码</span>
+        </div>-->
+        <span class="layui-btn chat_register_btn" onclick="window.location.href='/chat/register.html';">注册账号</span>
+        <button class="layui-btn chat_login_btn right" lay-submit="" lay-filter="login">立即登录</button>
+
+
+        <div class="layui-form-item quick-login">
+            <label style="margin-top: 30px;color: #cccccc">使用其他账号登录</label>
+            <i class="fa fa-qq" style="color: white;font-size: 24px;
+            cursor: pointer;margin: 30px 0 0 20px;"></i>
+            <i class="fa fa-wechat" style="color: white;font-size: 24px;
+            cursor: pointer;margin: 30px 0 0 10px;"></i>
+            <i class="fa fa-weibo" style="color: white;font-size: 24px;
+            cursor: pointer;margin: 30px 0 0 10px;"></i>
+        </div>
+    </form>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/statics/libs/jquery-1.10.2.min.js}"></script>
+<script type="text/javascript">
+
+
+    //是否自动登录
+    var autoLogin = localStorage.getItem("cy_im_autoLogin") || "false";
+    //如果是自动登录
+    if (autoLogin === "true") {
+        var username = localStorage.getItem("cy_im_username") || "";
+        var password = localStorage.getItem("cy_im_password") || "";
+        $("#username").val(username);
+        $("#password").val(password);
+        $("#rememberMe").attr("checked","checked");
+
+    }
+
+
+    //自动登录
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form();
+        form.on("checkbox(autoLogin)", function (data) {
+            var autoLogin = localStorage.getItem("cy_im_autoLogin") || "false";
+            if (autoLogin === "false") {
+                localStorage.setItem("cy_im_autoLogin", "true");
+                localStorage.setItem("cy_im_username", $("#username").val());
+                localStorage.setItem("cy_im_password", $("#password").val());
+            } else {
+                localStorage.setItem("cy_im_autoLogin", "false");
+                localStorage.setItem("cy_im_username", "");
+                localStorage.setItem("cy_im_password", "");
+            }
+        });
+
+
+    });
+
+
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form(),
+            layer = parent.layer === undefined ? layui.layer : parent.layer,
+            $ = layui.jquery;
+        //登录按钮事件
+        form.on("submit(login)", function (data) {
+
+
+            var autoLogin = localStorage.getItem("cy_im_autoLogin") || "false";
+            if (autoLogin === "true") {
+                localStorage.setItem("cy_im_username", $("#username").val());
+                localStorage.setItem("cy_im_password", $("#password").val());
+            } else {
+                localStorage.setItem("cy_im_username", "");
+                localStorage.setItem("cy_im_password", "");
+            }
+
+            $.ajax({
+                type: "post",
+                url: "/api/login",
+                data: {
+                    username: data.field.username,
+                    password: data.field.password,
+                    longitude: longitude||"",
+                    latitude: latitude||""
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 0) {//登录成功
+                        if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                            parent.location.href = '/mobile/mobile.html?t=' + result.data.token;
+                        } else {
+                            parent.location.href = 'chat.html?t=' + result.data.token;
+                        }
+                    } else {
+                        layer.msg(result.msg, {icon: 5});
+                    }
+                }
+            });
+            return false;
+        })
+
+    });
+    $(document).on("click",".quick-login i",function () {
+        layer.msg();
+    });
+
+    $(document).on("click",".forget-password",function () {
+        layer.msg("密码也能忘记！老铁,重新注册个账号吧！");
+    });
+
+
+</script>
+</body>
+</html>
