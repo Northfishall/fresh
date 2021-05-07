@@ -11,7 +11,7 @@
     "crypto-browserify": "3.12.0",
     "eth-lib": "0.2.7",
     "scrypt.js": "0.2.0",
-    "underscore": "1.8.3",
+    "underscore": "1.12.1",
     "uuid": "2.0.1",
     "web3-core": "1.0.0-beta.32",
     "web3-core-helpers": "1.0.0-beta.32",
